@@ -309,7 +309,9 @@ class HS2Api(Api):
 
     response['status'] = 'running' if status.value in (QueryHistory.STATE.running.value, QueryHistory.STATE.submitted.value) else 'available'
     if operation.hasResultSet is not None:
-      response['has_result_set']= operation.hasResultSet # HIVE-12442 - With LLAP & HIVE_CLI_SERVICE_PROTOCOL_V8, hasResultSet can change after get_operation_status
+      response['has_result_set'] = operation.hasResultSet # HIVE-12442 - With LLAP & HIVE_CLI_SERVICE_PROTOCOL_V8, hasResultSet can change after get_operation_status
+    if operation.progressUpdateResponse:
+      response['progressed_percentage'] = operation.progressUpdateResponse.progressedPercentage
 
     return response
 

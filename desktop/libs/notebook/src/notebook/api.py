@@ -254,25 +254,22 @@ def check_status(request):
     response['status'] = 'expired'
     raise
   finally:
-    if response['status'] == 0 and snippet['status'] != response['query_status']:
-      status = response['query_status']['status']
+    if response.get('query_status') is None:
+      response['query_status'] = {}
+    if response['status'] == 0:
+      response['query_status']['status'] = response['query_status']['status']
     elif response['status'] == 'expired':
-      status = 'expired'
+      response['query_status']['status'] = 'expired'
     else:
-      status = 'failed'
-    if response.get('query_status'):
-      has_result_set = response['query_status'].get('has_result_set')
-    else:
-      has_result_set = None
+      response['query_status']['status'] = 'failed'
 
     if notebook['type'].startswith('query') or notebook.get('isManaged'):
       nb_doc = Document2.objects.get_by_uuid(user=request.user, uuid=operation_id or notebook['uuid'])
       if nb_doc.can_write(request.user):
         nb = Notebook(document=nb_doc).get_data()
-        if status != nb['snippets'][0]['status'] or has_result_set != nb['snippets'][0].get('has_result_set'):
-          nb['snippets'][0]['status'] = status
-          if has_result_set is not None:
-            nb['snippets'][0]['has_result_set'] = has_result_set
+        diffs = [k for k in response['query_status'] if response['query_status'][k] != nb['snippets'][0].get(k)]
+        if diffs:
+          nb['snippets'][0].update(response['query_status'])
           nb_doc.update_data(nb)
           nb_doc.save()
 

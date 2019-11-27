@@ -235,15 +235,18 @@ export default class Executable {
 
     this.cancellables.push(
       apiHelper.checkExecutionStatus({ executable: this }).done(async queryStatus => {
-        switch (queryStatus) {
+        if (queryStatus.progressed_percentage !== undefined) {
+          this.setProgress(queryStatus.progressed_percentage * 100);
+        }
+        switch (queryStatus.status) {
           case EXECUTION_STATUS.success:
             this.executeEnded = Date.now();
-            this.setStatus(queryStatus);
-            this.setProgress(99); // TODO: why 99 here (from old code)?
+            this.setStatus(queryStatus.status);
+            this.setProgress(100);
             break;
           case EXECUTION_STATUS.available:
             this.executeEnded = Date.now();
-            this.setStatus(queryStatus);
+            this.setStatus(queryStatus.status);
             this.setProgress(100);
             if (!this.result && this.handle.has_result_set) {
               this.result = new ExecutionResult(this);
@@ -258,12 +261,12 @@ export default class Executable {
             break;
           case EXECUTION_STATUS.expired:
             this.executeEnded = Date.now();
-            this.setStatus(queryStatus);
+            this.setStatus(queryStatus.status);
             break;
           case EXECUTION_STATUS.running:
           case EXECUTION_STATUS.starting:
           case EXECUTION_STATUS.waiting:
-            this.setStatus(queryStatus);
+            this.setStatus(queryStatus.status);
             checkStatusTimeout = window.setTimeout(
               () => {
                 this.checkStatus(statusCheckCount);
@@ -273,11 +276,11 @@ export default class Executable {
             break;
           case EXECUTION_STATUS.failed:
             this.executeEnded = Date.now();
-            this.setStatus(queryStatus);
+            this.setStatus(queryStatus.status);
             break;
           default:
             this.executeEnded = Date.now();
-            console.warn('Got unknown status ' + queryStatus);
+            console.warn('Got unknown status ' + queryStatus.status);
         }
       })
     );
