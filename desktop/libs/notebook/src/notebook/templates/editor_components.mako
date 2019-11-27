@@ -572,7 +572,7 @@ ${ sqlSyntaxDropdown.sqlSyntaxDropdown() }
             <a data-bind="text: $.trim($data.name), hueLink: $data.url"></a>
           % endif
           <!-- ko if: typeof percentJob === 'function' && percentJob() > -1 -->
-          <div class="progress-job progress pull-left" style="background-color: #FFF; width: 100%" data-bind="css: {'progress-warning': percentJob() < 100, 'progress-success': percentJob() === 100}">
+          <div class="progress-job progress pull-left" style="background-color: #FFF; width: 100%" data-bind="css: {'progress-warning': $parent.status() !== 'available' && $parent.status() !== 'success', 'progress-success': $parent.status() === 'available' || $parent.status() === 'success'}">
             <div class="bar" data-bind="style: {'width': percentJob() + '%'}"></div>
           </div>
           <!-- /ko -->
@@ -1665,9 +1665,9 @@ ${ sqlSyntaxDropdown.sqlSyntaxDropdown() }
     <div class="snippet-progress-container" data-bind="visible: status() != 'canceled' && status() != 'with-optimizer-report'">
       <div class="progress-snippet progress" data-bind="css: {
         'progress-starting': progress() == 0 && (status() == 'running' || status() == 'starting'),
-        'progress-warning': progress() > 0 && progress() < 100,
-        'progress-success': progress() == 100,
-        'progress-danger': progress() == 0 && errors().length > 0}" style="background-color: #FFF; width: 100%">
+        'progress-warning': progress() > 0 && status() == 'running',
+        'progress-success': status() == 'available' || status() == 'success',
+        'progress-danger': errors().length > 0}" style="background-color: #FFF; width: 100%">
         <div class="bar" data-bind="style: {'width': (errors().length > 0 ? 100 : Math.max(2, progress())) + '%'}"></div>
       </div>
     </div>

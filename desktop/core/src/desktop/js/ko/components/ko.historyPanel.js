@@ -57,10 +57,10 @@ const TEMPLATE = `
       <!-- ko if: progress -->
       <div class="snippet-progress-container">
         <div class="progress-snippet progress" data-bind="css: {
-                  'progress-danger': progress() == 0 && errors().length > 0 || status() == 'failed',
+                  'progress-danger': errors().length > 0 || status() == 'failed',
                   'progress-starting': progress() == 0 && status() == 'running',
-                  'progress-warning': progress() > 0 && progress() < 100 && status() != 'failed',
-                  'progress-success': progress() == 100
+                  'progress-warning': progress() > 0 && status() == 'running',
+                  'progress-success': status() == 'available' || status() == 'success'
                   }" style="background-color: #FFF; width: 100%">
           <div class="bar" data-bind="style: {'width': (errors().length > 0 ? 100 : Math.max(2, progress())) + '%'}"></div>
         </div>

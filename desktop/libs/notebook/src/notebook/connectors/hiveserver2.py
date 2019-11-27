@@ -467,7 +467,7 @@ class HS2Api(Api):
       if isinstance(guid, str):
         guid = guid.encode('utf-8')
       query_id = unpack_guid_base64(guid)
-      progress = min(self.progress(notebook, snippet, logs), 99) if snippet['status'] != 'available' and snippet['status'] != 'success' else 100
+      progress = self.progress(notebook, snippet, logs)
       jobs = [{
         'name': query_id,
         'url': '/hue/jobbrowser#!id=%s' % query_id,

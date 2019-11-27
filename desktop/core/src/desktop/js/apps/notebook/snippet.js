@@ -1002,7 +1002,7 @@ class Snippet {
     );
     self.progress = ko.observable(
       typeof snippet.progress !== 'undefined' && snippet.progress != null ? snippet.progress : 0
-    );
+    ).extend({ increasing: null });
     self.jobs = ko.observableArray(
       typeof snippet.jobs !== 'undefined' && snippet.jobs != null ? snippet.jobs : []
     );
@@ -1763,7 +1763,7 @@ class Snippet {
       self.errors([]);
       huePubSub.publish('editor.clear.highlighted.errors', self.ace());
       self.result.clear();
-      self.progress(0);
+      self.progress(null);
       self.jobs([]);
       self.result.logs('');
       self.result.statement_range({
@@ -1982,7 +1982,7 @@ class Snippet {
 
       self.result.explanation('');
       self.errors([]);
-      self.progress(0);
+      self.progress(null);
       self.status('ready');
 
       $.post(
@@ -2552,10 +2552,7 @@ class Snippet {
                 }
               });
             }
-            if (self.status() == 'running') {
-              // Maybe the query finished or failed in the meantime
-              self.progress(data.progress);
-            }
+            self.progress(data.progress);
           } else {
             self._ajaxError(data);
           }
@@ -2714,7 +2711,7 @@ class Snippet {
         self.checkStatus();
       } else if (self.status() == 'loading') {
         self.status('failed');
-        self.progress(0);
+        self.progress(null);
         self.jobs([]);
       } else if (self.status() == 'ready-execute') {
         self.execute();

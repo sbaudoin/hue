@@ -60,7 +60,7 @@ export default class Executable {
     this.operationId = undefined;
     this.history = undefined;
     this.status = EXECUTION_STATUS.ready;
-    this.progress = 0;
+    this.progress = null;
     this.result = undefined;
     this.logs = new ExecutionLogs(this);
 
@@ -164,7 +164,7 @@ export default class Executable {
     this.executeStarted = Date.now();
 
     this.setStatus(EXECUTION_STATUS.running);
-    this.setProgress(0);
+    this.setProgress(null);
 
     try {
       hueAnalytics.log('notebook', 'execute/' + this.executor.sourceType());
@@ -324,7 +324,7 @@ export default class Executable {
     this.handle = {
       statement_id: 0
     };
-    this.setProgress(0);
+    this.setProgress(null);
     this.setStatus(EXECUTION_STATUS.ready);
   }
 

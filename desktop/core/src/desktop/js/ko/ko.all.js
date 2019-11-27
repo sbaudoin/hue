@@ -167,6 +167,7 @@ import 'ko/components/ko.shareDocModal';
 import 'ko/components/ko.sidebar';
 import 'ko/components/ko.sqlColumnsTable';
 
+import 'ko/extenders/ko.increasing';
 import 'ko/extenders/ko.maxLength';
 import 'ko/extenders/ko.numeric';
 import 'ko/extenders/ko.toJson';

@@ -38,7 +38,7 @@ class ExecutableProgressBar extends DisposableComponent {
     this.activeExecutable = params.activeExecutable;
 
     this.status = ko.observable();
-    this.progress = ko.observable(0);
+    this.progress = ko.observable(0).extend({ increasing: null });
 
     this.progressClass = ko.pureComputed(() => {
       if (this.status() === EXECUTION_STATUS.failed) {
@@ -50,10 +50,10 @@ class ExecutableProgressBar extends DisposableComponent {
       ) {
         return 'progress-starting';
       }
-      if (0 < this.progress() && this.progress() < 100) {
+      if (this.progress() > 0 && this.status() === EXECUTION_STATUS.running) {
         return 'progress-running';
       }
-      if (this.progress() === 100) {
+      if (this.status() === EXECUTION_STATUS.available || this.status() === EXECUTION_STATUS.success) {
         return 'progress-success';
       }
     });

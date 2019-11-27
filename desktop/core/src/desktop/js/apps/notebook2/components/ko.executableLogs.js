@@ -54,8 +54,8 @@ const TEMPLATE = `
         <!-- ko if: percentJob >= 0 -->
         <div class="progress-job progress pull-left" style="background-color: #FFF; width: 100%" data-bind="
             css: {
-              'progress-warning': percentJob < 100,
-              'progress-success': percentJob === 100
+              'progress-warning': $parent.status() !== 'available' && $parent.status() !== 'success',
+              'progress-success': $parent.status() === 'available' || $parent.status() === 'success'
             }">
           <div class="bar" data-bind="style: { 'width': percentJob + '%' }"></div>
         </div>
